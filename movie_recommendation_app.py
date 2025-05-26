@@ -5,6 +5,7 @@ import pickle
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QStringListModel
 from gensim.models import Word2Vec
 from scipy.io import mmread
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
@@ -24,12 +25,23 @@ class Exam(QWidget, form_window):
         self.titles.sort()
         for title in self.titles:
             self.comboBox.addItem(title)
-
+        model =QStringListModel()
+        model.setStringList(self.titles)
+        completer = QCompleter()
+        completer.setModel(model)
+        self.le_keyword.setCompleter(completer)
         self.comboBox.currentIndexChanged.connect(self.comboBox_slot)
         self.btn_recommendation.clicked.connect(self.btn_slot)
 
     def btn_slot(self):
-        keyword = self.le_keyword.text()
+        user_input = self.le_keyword.text()
+        if user_input in self.titles:
+            self.movie_title_recommendation(user_input)
+        else:
+            self.keyword_slot(user_input.split()[0])
+
+
+    def keyword_slot(self, keyword):
         sim_word = self.embedding_model.wv.most_similar(keyword, topn=10)
         words = [keyword]
         for word, _ in sim_word:
@@ -60,7 +72,9 @@ class Exam(QWidget, form_window):
 
     def comboBox_slot(self):
         title = self.comboBox.currentText()
-        print(title)
+        self.movie_title_recommendation(title)
+
+    def movie_title_recommendation(self, title):
         movie_idx = self.df_reviews[self.df_reviews['titles'] == title].index[0]
         cosine_sim = linear_kernel(self.tfidf_matrix[movie_idx], self.tfidf_matrix)
 
