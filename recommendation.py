@@ -13,7 +13,7 @@ def getRecommendations(cosine_sim):
     simScore = simScore[:11]
     movie_idx = [i[0] for i in simScore]
     rec_movie_list = df_reviews.iloc[movie_idx, 0]
-    return rec_movie_list[1:11]
+    return rec_movie_list[:11]
 
 df_reviews = pd.read_csv('./cleaned_data/cleaned_reviews.csv')
 df_reviews.info()
@@ -28,7 +28,7 @@ with open('./models/tfidf.pickle', 'rb') as f:
 # print(cosine_sim)
 # print(len(cosine_sim[0]))
 # recommendation = getRecommendations(cosine_sim)
-# print(recommendation)
+# print(recommendation[1:])
 
 # keyword를 이용한 추천
 embedding_model = Word2Vec.load('./models/word2vec_movie_review.model')
@@ -49,4 +49,4 @@ print(sentence)
 sentence_vec = tfidf.transform([sentence])
 cosine_sim = linear_kernel(sentence_vec, tfidf_matrix)
 recommendations = getRecommendations(cosine_sim)
-print(recommendations)
+print(recommendations[:10])
