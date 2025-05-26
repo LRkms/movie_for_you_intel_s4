@@ -9,6 +9,10 @@ df = pd.read_csv('./cleaned_data/movie_reviews.csv')
 df.info()
 print(df.head())
 
+stop_words = ['영화', '감독', '연출', '배우', '하다', '보다', '있다', '없다', '되다',
+              '않다', '연기','작품', '이다', '내다', '주다', '나오다', '아니다', '줄이다'
+              '싶다', '많다', '짜다']
+
 cleaned_sentences = []
 
 for review in df.reviews:
@@ -22,6 +26,8 @@ for review in df.reviews:
     words = []
     for word in df_token.word:
         if 1 < len(word):
+            if word not in stop_words:
+                words.append(word)
             words.append(word)
     cleaned_sentence = ' '.join(words)
     print(cleaned_sentence)
