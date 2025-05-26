@@ -6,7 +6,7 @@ import pickle
 # TF = 특정 문장안에 출현하는 단어 빈도수가 많은 거를 찾기
 # DF =
 
-df_reviews = pd.read_csv('./cleaned_data/cleaned_reviews.csv')
+df_reviews = pd.read_csv('./cleaned_data/cleaned_reviews_1.csv')
 df_reviews.dropna(inplace=True)
 df_reviews.info()
 
@@ -15,10 +15,10 @@ tfidf_matrix = tfidf.fit_transform(df_reviews['reviews'])
 print(tfidf_matrix.shape)
 print(tfidf_matrix[0])
 
-with open('./models/tfidf.pickle', 'wb') as f:
+with open('./models/tfidf_1.pickle', 'wb') as f:
     pickle.dump(tfidf, f)
 
-mmwrite('./models/tfidf_movie_review.mtx', tfidf_matrix)
+mmwrite('./models/tfidf_movie_review_1.mtx', tfidf_matrix)
 
 
 
